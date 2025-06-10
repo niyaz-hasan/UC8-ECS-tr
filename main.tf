@@ -17,7 +17,7 @@ module "ecs" {
   subnets = module.vpc.public_subnets
   security_group_id = module.security_group.ecs_sg
   ecs_role_arn     = module.iam.ecs_role_arn
-  target        = module.alb.target_1[module.alb.target_1, module.alb.target_2]
+  target           = [module.alb.target_1, module.alb.target_2]
 }
 
 module "iam" {
