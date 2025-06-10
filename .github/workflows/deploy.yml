@@ -6,6 +6,10 @@ on:
       - completed
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   deploy-service1:
     runs-on: ubuntu-latest
