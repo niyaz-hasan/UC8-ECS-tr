@@ -99,11 +99,11 @@ resource "aws_ecs_service" "main_1" {
   name            = "${var.name}-service-1"
   cluster         = aws_ecs_cluster.test.id
   task_definition = aws_ecs_task_definition.test_1.arn
-  desired_count   = 2
+  desired_count   = 1
   launch_type     = "FARGATE"
   load_balancer {
     target_group_arn = var.target[0]
-    container_name   = "${var.name}-container"
+    container_name   = "${var.name}-container1"
     container_port   = 3001
   }
 
@@ -118,11 +118,11 @@ resource "aws_ecs_service" "main_2" {
   name            = "${var.name}-service-2"
   cluster         = aws_ecs_cluster.test.id
   task_definition = aws_ecs_task_definition.test_2.arn
-  desired_count   = 2
+  desired_count   = 1
   launch_type     = "FARGATE"
   load_balancer {
     target_group_arn = var.target[1]
-    container_name   = "${var.name}-container"
+    container_name   = "${var.name}-container2"
     container_port   = 3000
   }
 

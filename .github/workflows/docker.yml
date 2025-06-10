@@ -1,0 +1,65 @@
+name: Build and Push to ECR
+on:
+  push:
+    paths:
+      - 'docker/**'
+      - '.github/workflows/docker.yml'
+  workflow_dispatch:
+
+jobs:
+  build-push-service1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::975049998898:role/githubaction-assumerole
+          role-session-name: github-assume
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker Image for Service1
+        run: |
+          docker build -t ${{ vars.ECR_REGISTRY }}/service1:${{ github.sha }} ./docker/service1
+
+      - name: Push Docker Image for Service1
+        run: |
+          docker push ${{ vars.ECR_REGISTRY }}/service1:${{ github.sha }}
+
+      - name: Save Service1 Image Tag
+        run: echo "SERVICE1_IMAGE=${{ vars.ECR_REGISTRY }}/service1:${{ github.sha }}" >> $GITHUB_ENV
+
+  build-push-service2:
+    runs-on: ubuntu-latest
+    needs: build-push-service1  # Optional dependency
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::975049998898:role/githubaction-assumerole
+          role-session-name: github-assume
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker Image for Service2
+        run: |
+          docker build -t ${{ vars.ECR_REGISTRY }}/service2:${{ github.sha }} ./docker/service2
+
+      - name: Push Docker Image for Service2
+        run: |
+          docker push ${{ vars.ECR_REGISTRY }}/service2:${{ github.sha }}
+
+      - name: Save Service2 Image Tag
+        run: echo "SERVICE2_IMAGE=${{ vars.ECR_REGISTRY }}/service2:${{ github.sha }}" >> $GITHUB_ENV
