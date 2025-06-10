@@ -8,10 +8,10 @@ variable "ecr_repo_url" {
   type        = string
 }
 
-variable "availability_zones" {
-  description = "List of availability zones"
-  type        = list(string)
-}
+#variable "availability_zones" {
+#  description = "List of availability zones"
+#  type        = list(string)
+#}
 
 variable "subnets" {
   description = "subnets"
