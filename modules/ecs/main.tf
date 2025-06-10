@@ -1,5 +1,11 @@
 resource "aws_ecs_cluster" "test" {
   name = var.name
+  
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
+
   tags = {
     Name = var.name
   }
@@ -33,6 +39,14 @@ resource "aws_ecs_task_definition" "test_1" {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
   }
+  logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = var.appointment_service
+          "awslogs-region"        = data.aws_region.current.name
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
   tags = {
     "Name" = "${var.name}-task1"
   }
@@ -66,6 +80,14 @@ resource "aws_ecs_task_definition" "test_2" {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
   }
+  logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = var.patient_service
+          "awslogs-region"        = data.aws_region.current.name
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
   tags = {
     "Name" = "${var.name}-task2"
   }
@@ -110,3 +132,6 @@ resource "aws_ecs_service" "main_2" {
     assign_public_ip = true
   }
 }
+
+# Data source for current AWS region
+data "aws_region" "current" {}

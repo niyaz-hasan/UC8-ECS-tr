@@ -16,29 +16,47 @@ resource "aws_lb" "main" {
 # Define Target Group 1 (for the first ECS service)
 resource "aws_lb_target_group" "ecs_target_group_1" {
   name     = "${var.name}-tg1"
-  port     = 80
+  port     = 3001
   protocol = "HTTP"
   target_type = "ip"
   vpc_id   = var.vpc_id
 
-#  health_check {
-#    interval            = 30
-#    path                = "/health"
-#    port                = "traffic-port"
-#    protocol            = "HTTP"
-#    timeout             = 5
-#    healthy_threshold   = 3
-#    unhealthy_threshold = 3
-#  }
+  health_check {
+    interval            = 30
+    path                = "/health"
+    port                = "traffic-port"
+    protocol            = "HTTP"
+    timeout             = 5
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+
+    matcher {
+      http_code = "200-404"
+    }
+  }
 }
 
 # Define Target Group 2 (for the second ECS service)
 resource "aws_lb_target_group" "ecs_target_group_2" {
   name     = "${var.name}-tg2"
-  port     = 80
+  port     = 3000
   protocol = "HTTP"
   target_type = "ip"
   vpc_id   = var.vpc_id
+
+  health_check {
+    interval            = 30
+    path                = "/health"
+    port                = "traffic-port"
+    protocol            = "HTTP"
+    timeout             = 5
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+
+    matcher {
+      http_code = "200-404"
+    }
+  }
 
 }
 
@@ -49,11 +67,12 @@ resource "aws_lb_listener" "http" {
   protocol          = "HTTP"
 
   default_action {
-    type             = "fixed-response"
+    type = "fixed-response"
+
     fixed_response {
-      status_code = 200
-      message_body = "OK"
       content_type = "text/plain"
+      message_body = "Healthcare Application - Try /patients or /appointments"
+      status_code  = "404"
     }
   }
 }
