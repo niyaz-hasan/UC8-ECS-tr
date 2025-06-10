@@ -18,6 +18,8 @@ module "ecs" {
   security_group_ids = [module.security_group.ecs_sg]
   ecs_role_arn     = module.iam.ecs_role_arn
   target           = [module.alb.target_1, module.alb.target_2]
+  appointment_service = module.cloudwatch.appointment_service_log_group_name
+  patient_service     = module.cloudwatch.patient_service_log_group_name
 }
 
 module "iam" {
