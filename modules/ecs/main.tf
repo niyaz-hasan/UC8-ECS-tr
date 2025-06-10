@@ -34,8 +34,8 @@ resource "aws_ecs_task_definition" "test_1" {
         "logConfiguration": {
         "logDriver": "awslogs"
         "options": {
-          "awslogs-group"         : var.appointment_service
-          "awslogs-region"        : data.aws_region.current.name
+          "awslogs-group"         : "${var.appointment_service}"
+          "awslogs-region"        : "${data.aws_region.current.name}"
           "awslogs-stream-prefix" : "ecs"
         }
       }
@@ -75,8 +75,8 @@ resource "aws_ecs_task_definition" "test_2" {
         "logConfiguration": {
         "logDriver": "awslogs"
         "options": {
-          "awslogs-group"         : var.patient_service
-          "awslogs-region"        : data.aws_region.current.name
+          "awslogs-group"         : "${var.patient_service}"
+          "awslogs-region"        : "${data.aws_region.current.name}"
           "awslogs-stream-prefix" : "ecs"
         }
       }
