@@ -4,24 +4,94 @@ on:
     workflows: ["Build and Push to ECR"]
     types:
       - completed
-deploy-both:
-  runs-on: ubuntu-latest
-  if: ${{ github.event.workflow_run.conclusion == 'success' }}
-  steps:
-    - name: Deploy Service1
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ vars.ECS_TASK_DEFINITION_SERVICE1 }}
-        service: ${{ vars.ECS_SERVICE_SERVICE1 }}
-        cluster: ${{ vars.ECS_CLUSTER }}
-        image: ${{ vars.ECR_REGISTRY }}/test-repo-1:${{ github.event.workflow_run.head_sha }}
-        container-name: ${{ vars.CONTAINER_NAME_SERVICE1 }}
-        
-    - name: Deploy Service2
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ vars.ECS_TASK_DEFINITION_SERVICE2 }}
-        service: ${{ vars.ECS_SERVICE_SERVICE2 }}
-        cluster: ${{ vars.ECS_CLUSTER }}
-        image: ${{ vars.ECR_REGISTRY }}/test-repo-2:${{ github.event.workflow_run.head_sha }}
-        container-name: ${{ vars.CONTAINER_NAME_SERVICE2 }}
+  workflow_dispatch:
+
+jobs:
+  deploy-service1:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Get Service1 Image URI
+        run: |
+          echo "image_uri=$(aws ecr describe-images \
+            --repository-name service1 \
+            --image-ids imageTag=${{ github.event.workflow_run.head_sha }} \
+            --query 'imageDetails[0].imageTags[?contains(@, `${{ github.event.workflow_run.head_sha }}`)]' \
+            --output text)" >> $GITHUB_OUTPUT
+        id: get_image_service1
+
+      - name: Download Task Definition for Service1
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition ${{ vars.ECS_TASK_DEFINITION_SERVICE1 }} \
+            --query taskDefinition > task-definition-service1.json
+
+      - name: Update Image in Task Definition
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition-service1.json
+          container-name: ${{ vars.CONTAINER_NAME_SERVICE1 }}
+          image: ${{ steps.get_image_service1.outputs.image_uri }}
+
+      - name: Deploy Service1 to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: rendered-task-definition.json
+          service: ${{ vars.ECS_SERVICE_SERVICE1 }}
+          cluster: ${{ vars.ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+  deploy-service2:
+    runs-on: ubuntu-latest
+    needs: deploy-service1  # Optional: Run sequentially after service1
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Get Service2 Image URI
+        run: |
+          echo "image_uri=$(aws ecr describe-images \
+            --repository-name service2 \
+            --image-ids imageTag=${{ github.event.workflow_run.head_sha }} \
+            --query 'imageDetails[0].imageTags[?contains(@, `${{ github.event.workflow_run.head_sha }}`)]' \
+            --output text)" >> $GITHUB_OUTPUT
+        id: get_image_service2
+
+      - name: Download Task Definition for Service2
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition ${{ vars.ECS_TASK_DEFINITION_SERVICE2 }} \
+            --query taskDefinition > task-definition-service2.json
+
+      - name: Update Image in Task Definition
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition-service2.json
+          container-name: ${{ vars.CONTAINER_NAME_SERVICE2 }}
+          image: ${{ steps.get_image_service2.outputs.image_uri }}
+
+      - name: Deploy Service2 to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: rendered-task-definition.json
+          service: ${{ vars.ECS_SERVICE_SERVICE2 }}
+          cluster: ${{ vars.ECS_CLUSTER }}
+          wait-for-service-stability: true
