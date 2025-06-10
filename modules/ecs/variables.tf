@@ -23,7 +23,7 @@ variable "subnets" {
   type        = list(string)
 }
 
-variable "security_group_id" {
+variable "security_group_ids" {
   description = "security_group_id"
   type        = list(string)
 }

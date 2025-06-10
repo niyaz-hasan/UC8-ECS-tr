@@ -15,7 +15,7 @@ module "ecs" {
   name   = var.name
   ecr_repo_url = module.ecr.ecr_repo_url
   subnets = module.vpc.public_subnets
-  security_group_id = module.security_group.ecs_sg
+  security_group_ids = [module.security_group.ecs_sg]
   ecs_role_arn     = module.iam.ecs_role_arn
   target           = [module.alb.target_1, module.alb.target_2]
 }
