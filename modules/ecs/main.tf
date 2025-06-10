@@ -6,7 +6,7 @@ resource "aws_ecs_cluster" "test" {
 }
 
 resource "aws_ecs_task_definition" "test_1" {
-  "family"                 = "${var.name}-task-definition-1"
+  family                 = "${var.name}-task-definition-1"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 256
@@ -39,7 +39,7 @@ resource "aws_ecs_task_definition" "test_1" {
 }
 
 resource "aws_ecs_task_definition" "test_2" {
-  "family"                 = "${var.name}-task-definition-2"
+  family                 = "${var.name}-task-definition-2"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 256
