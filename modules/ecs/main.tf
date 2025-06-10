@@ -32,7 +32,7 @@ resource "aws_ecs_task_definition" "test_1" {
             }
         ]
         "logConfiguration": {
-        "logDriver": "awslogs"
+        "logDriver": "awslogs",
         "options": {
           "awslogs-group"         : "${var.appointment_service}",
           "awslogs-region"        : "${data.aws_region.current.name}",
@@ -73,7 +73,7 @@ resource "aws_ecs_task_definition" "test_2" {
             }
         ]
         "logConfiguration": {
-        "logDriver": "awslogs"
+        "logDriver": "awslogs",
         "options": {
           "awslogs-group"         : "${var.patient_service}",
           "awslogs-region"        : "${data.aws_region.current.name}",
