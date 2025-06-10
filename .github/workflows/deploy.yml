@@ -14,7 +14,7 @@ deploy-both:
         task-definition: ${{ vars.ECS_TASK_DEFINITION_SERVICE1 }}
         service: ${{ vars.ECS_SERVICE_SERVICE1 }}
         cluster: ${{ vars.ECS_CLUSTER }}
-        image: ${{ vars.ECR_REGISTRY }}/service1:${{ github.event.workflow_run.head_sha }}
+        image: ${{ vars.ECR_REGISTRY }}/test-repo-1:${{ github.event.workflow_run.head_sha }}
         container-name: ${{ vars.CONTAINER_NAME_SERVICE1 }}
         
     - name: Deploy Service2
@@ -23,5 +23,5 @@ deploy-both:
         task-definition: ${{ vars.ECS_TASK_DEFINITION_SERVICE2 }}
         service: ${{ vars.ECS_SERVICE_SERVICE2 }}
         cluster: ${{ vars.ECS_CLUSTER }}
-        image: ${{ vars.ECR_REGISTRY }}/service2:${{ github.event.workflow_run.head_sha }}
+        image: ${{ vars.ECR_REGISTRY }}/test-repo-2:${{ github.event.workflow_run.head_sha }}
         container-name: ${{ vars.CONTAINER_NAME_SERVICE2 }}
