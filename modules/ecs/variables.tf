@@ -10,7 +10,7 @@ variable "ecs_role_arn"  {
 
 variable "ecr_repo_url" {
   description = "URL of the ECR repository"
-  type        = string
+  type        = list(string)
 }
 
 #variable "availability_zones" {

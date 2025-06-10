@@ -1,7 +1,16 @@
-resource "aws_ecr_repository" "app_repo" {
-  name = "${var.name}-repo"
+resource "aws_ecr_repository" "app_repo_1" {
+  name = "${var.name}-repo-1"
 }
 
-output "ecr_repo_url" {
-  value = aws_ecr_repository.app_repo.repository_url
+resource "aws_ecr_repository" "app_repo_2" {
+  name = "${var.name}-repo-2"
+}
+
+
+output "ecr_repo_url_1" {
+  value = aws_ecr_repository.app_repo_1.repository_url
+}
+
+output "ecr_repo_url_2" {
+  value = aws_ecr_repository.app_repo_2.repository_url
 }
