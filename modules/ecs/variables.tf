@@ -33,3 +33,13 @@ variable "target" {
   description = "target"
   type        = list(string)
 }
+
+variable "patient_service" {
+  description = "patient_service"
+  type        = string
+}
+
+variable "appointment_service" {
+  description = "appointment_service"
+  type        = string
+}
