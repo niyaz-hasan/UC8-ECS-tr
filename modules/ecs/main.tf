@@ -21,8 +21,8 @@ resource "aws_ecs_task_definition" "test_1" {
         "essential": true,
         "portMappings": [
             {
-             "containerPort": 8080,
-             "hostPort": 8080
+             "containerPort": 3001,
+             "hostPort": 3001
             }
         ]
     }
@@ -54,8 +54,8 @@ resource "aws_ecs_task_definition" "test_2" {
         "essential": true,
         "portMappings": [
             {
-             "containerPort": 80,
-             "hostPort": 80
+             "containerPort": 3000,
+             "hostPort": 3000
             }
         ]
     }
@@ -82,7 +82,7 @@ resource "aws_ecs_service" "main_1" {
   load_balancer {
     target_group_arn = var.target[0]
     container_name   = "${var.name}-container"
-    container_port   = 80
+    container_port   = 3001
   }
 
   network_configuration {
@@ -101,7 +101,7 @@ resource "aws_ecs_service" "main_2" {
   load_balancer {
     target_group_arn = var.target[1]
     container_name   = "${var.name}-container"
-    container_port   = 80
+    container_port   = 3000
   }
 
   network_configuration {
