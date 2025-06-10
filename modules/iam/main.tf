@@ -20,8 +20,7 @@ EOF
 
 resource "aws_iam_role_policy" "ecs_execution_policy" {
   name = "${var.name}-ecs-policy"
-  role = aws_iam_role.ecs_task_role.id
-
+  
   policy = <<EOF
 {
     "Version": "2012-10-17",
