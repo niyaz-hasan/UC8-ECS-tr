@@ -68,7 +68,7 @@ resource "aws_lb_listener_rule" "ecs_listener_rule_1" {
 
   condition {
     path_pattern {
-      values = ["/service1*"]
+      values = ["/appointments*"]
     }
   }
 }
@@ -86,7 +86,7 @@ resource "aws_lb_listener_rule" "ecs_listener_rule_2" {
 
   condition {
     path_pattern {
-      values = ["/service2*"]
+      values = ["/patients*"]
     }
   }
 }
