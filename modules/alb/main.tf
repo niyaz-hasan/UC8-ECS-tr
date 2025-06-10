@@ -29,10 +29,7 @@ resource "aws_lb_target_group" "ecs_target_group_1" {
     timeout             = 5
     healthy_threshold   = 3
     unhealthy_threshold = 3
-
-    matcher {
-      http_code = "200-404"
-    }
+    matcher             = "200-404"
   }
 }
 
@@ -52,10 +49,7 @@ resource "aws_lb_target_group" "ecs_target_group_2" {
     timeout             = 5
     healthy_threshold   = 3
     unhealthy_threshold = 3
-
-    matcher {
-      http_code = "200-404"
-    }
+    matcher             = "200-404"
   }
 
 }

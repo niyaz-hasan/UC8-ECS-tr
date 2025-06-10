@@ -31,6 +31,14 @@ resource "aws_ecs_task_definition" "test_1" {
              "hostPort": 3001
             }
         ]
+        logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = var.appointment_service
+          "awslogs-region"        = data.aws_region.current.name
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     }
     ]
     TASK_DEFINITION
@@ -39,14 +47,6 @@ resource "aws_ecs_task_definition" "test_1" {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
   }
-  logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          "awslogs-group"         = var.appointment_service
-          "awslogs-region"        = data.aws_region.current.name
-          "awslogs-stream-prefix" = "ecs"
-        }
-      }
   tags = {
     "Name" = "${var.name}-task1"
   }
@@ -72,6 +72,14 @@ resource "aws_ecs_task_definition" "test_2" {
              "hostPort": 3000
             }
         ]
+        logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = var.patient_service
+          "awslogs-region"        = data.aws_region.current.name
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     }
     ]
     TASK_DEFINITION
@@ -80,14 +88,6 @@ resource "aws_ecs_task_definition" "test_2" {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
   }
-  logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          "awslogs-group"         = var.patient_service
-          "awslogs-region"        = data.aws_region.current.name
-          "awslogs-stream-prefix" = "ecs"
-        }
-      }
   tags = {
     "Name" = "${var.name}-task2"
   }

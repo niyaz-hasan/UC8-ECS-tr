@@ -10,10 +10,10 @@ resource "aws_cloudwatch_log_group" "appointment_service" {
   retention_in_days = 7
 }
 
-resource "aws_cloudwatch_log_stream" "ecs_log_stream" {
-  log_group_name = aws_cloudwatch_log_group.ecs_log_group.name
-  name           = "${var.name}-stream"
-}
+#resource "aws_cloudwatch_log_stream" "ecs_log_stream" {
+#  log_group_name = aws_cloudwatch_log_group.ecs_log_group.name
+#  name           = "${var.name}-stream"
+#}
 
 
 output "patient_service_log_group_name" {
