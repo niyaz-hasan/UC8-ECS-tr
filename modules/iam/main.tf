@@ -18,9 +18,9 @@ resource "aws_iam_role" "ecs_execution_role" {
 EOF
 }
 
-resource "aws_iam_role_policy" "ecs_execution_policy" {
+resource "aws_iam_policy" "ecs_execution_policy" {
   name = "${var.name}-ecs-policy"
-  
+
   policy = <<EOF
 {
     "Version": "2012-10-17",
