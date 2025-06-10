@@ -3,68 +3,43 @@ module "vpc" {
   name           = var.name
   vpc_cidr_block = var.vpc_cidr_block
   
-  
+}
 
+module "ecr" {
+  source = "./modules/ecr"
+  name   = var.name
+}
+
+module "ecs" {
+  source = "./modules/ecs"
+  name   = var.name
+  ecr_repo_url = module.ecr.ecr_repo_url
+  availability_zones = var.availability_zones
+  subnets = module.vpc.public_subnets[*].id
+  security_group_id = module.security_group.ecs_sg.id
+}
+
+module "iam" {
+  source = "./modules/iam"
+  name   = var.name
+}
+
+module "security_group" {
+  source = "./modules/security_group"
+  vpc_id = module.vpc.vpc_id
+}
+
+module "cloudwatch" {
+  source = "./modules/cloudwatch"
+  name   = var.name
 }
 
 module "alb" {
-  source      = "./modules/alb"
-  vpc_id      = module.vpc.vpc_id
-  subnets     = module.vpc.public_subnets
-  security_groups = [module.sg_group.alb_security_group_id]
-  tg_arns     = [module.target_group.arn]
+  source = "./modules/alb"
+  name                 = var.name
+  vpc_id               = module.vpc.vpc_id
+  subnets              = module.vpc.public_subnets
+  security_group_id    = module.security_group.ecs_sg
 }
 
-module "target_group" {
-  source      = "./modules/target_group"
-  name        = "target-group"
-  port        = 80
-  vpc_id      = module.vpc.vpc_id
-  path        = "/"
-}
-
-
-
-module "sg_group" {
-  source     = "./modules/sg_group"
-  vpc_id     = module.vpc.vpc_id
-}
-
-
-locals {
-  user_data_a = <<-EOF
-              #!/bin/bash
-              yum install -y nginx
-              systemctl start nginx
-              systemctl enable nginx
-              echo "<p>Instance A</p>" >> /usr/share/nginx/html/index.html
-          EOF
-
-  user_data_b = <<-EOF
-              #!/bin/bash
-              yum install -y nginx
-              systemctl start nginx
-              systemctl enable nginx
-              echo "<p>Instance B</p>" >> /usr/share/nginx/html/index.html
-          EOF
-}
-
-
-module "instances_a" {
-  source          = "./modules/instance"
-  tg_arn          = module.target_group.arn
-  subnet_id       = module.vpc.public_subnets[0]
-  vpc_security_group_ids = [module.sg_group.ec2_security_group_id]
-  user_data       = local.user_data_a
-  name            = "instance-a"
-}
-
-module "instances_b" {
-  source          = "./modules/instance"
-  tg_arn          = module.target_group.arn
-  subnet_id       = module.vpc.public_subnets[1]
-  vpc_security_group_ids = [module.sg_group.ec2_security_group_id]
-  user_data       = local.user_data_b
-  name            = "instance-b"
-}
 
