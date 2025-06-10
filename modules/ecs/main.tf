@@ -87,7 +87,7 @@ resource "aws_ecs_service" "main_1" {
 
   network_configuration {
     subnets          = var.subnets
-    security_groups = [var.security_group_id]
+    security_groups = var.security_group_id
     assign_public_ip = true
   }
 }
@@ -106,7 +106,7 @@ resource "aws_ecs_service" "main_2" {
 
   network_configuration {
     subnets          = var.subnets
-    security_groups = [var.security_group_id]
+    security_groups = var.security_group_id
     assign_public_ip = true
   }
 }
