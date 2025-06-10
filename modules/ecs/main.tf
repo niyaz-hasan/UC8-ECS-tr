@@ -31,12 +31,12 @@ resource "aws_ecs_task_definition" "test_1" {
              "hostPort": 3001
             }
         ]
-        "logConfiguration" : {
-        "logDriver" : "awslogs"
-        "options" : {
-          "awslogs-group"         = var.appointment_service
-          "awslogs-region"        = data.aws_region.current.name
-          "awslogs-stream-prefix" = "ecs"
+        "logConfiguration": {
+        "logDriver": "awslogs"
+        "options": {
+          "awslogs-group"         : var.appointment_service
+          "awslogs-region"        : data.aws_region.current.name
+          "awslogs-stream-prefix" : "ecs"
         }
       }
     }
@@ -72,12 +72,12 @@ resource "aws_ecs_task_definition" "test_2" {
              "hostPort": 3000
             }
         ]
-        "logConfiguration" : {
-        "logDriver" : "awslogs"
-        "options" : {
-          "awslogs-group"         = var.patient_service
-          "awslogs-region"        = data.aws_region.current.name
-          "awslogs-stream-prefix" = "ecs"
+        "logConfiguration": {
+        "logDriver": "awslogs"
+        "options": {
+          "awslogs-group"         : var.patient_service
+          "awslogs-region"        : data.aws_region.current.name
+          "awslogs-stream-prefix" : "ecs"
         }
       }
     }
