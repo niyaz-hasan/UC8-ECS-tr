@@ -15,7 +15,7 @@ resource "aws_ecs_task_definition" "test_1" {
     [
     {
         "name": "test-container",
-        "image": "${var.ecr_repo_url}:latest",
+        "image": "${var.ecr_repo_url[0]}:latest",
         "cpu": 128,
         "memory": 128,
         "essential": true,
@@ -48,7 +48,7 @@ resource "aws_ecs_task_definition" "test_2" {
     [
     {
         "name": "test-container",
-        "image": "${var.ecr_repo_url}:latest",
+        "image": "${var.ecr_repo_url[1]}:latest",
         "cpu": 128,
         "memory": 128,
         "essential": true,
