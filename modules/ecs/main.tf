@@ -30,7 +30,7 @@ resource "aws_ecs_task_definition" "test_1" {
              "containerPort": 3001,
              "hostPort": 3001
             }
-        ]
+        ],
         "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -71,7 +71,7 @@ resource "aws_ecs_task_definition" "test_2" {
              "containerPort": 3000,
              "hostPort": 3000
             }
-        ]
+        ],
         "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
