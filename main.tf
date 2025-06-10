@@ -14,9 +14,8 @@ module "ecs" {
   source = "./modules/ecs"
   name   = var.name
   ecr_repo_url = module.ecr.ecr_repo_url
-  availability_zones = var.availability_zones
-  subnets = module.vpc.public_subnets[*].id
-  security_group_id = module.security_group.ecs_sg.id
+  subnets = module.vpc.public_subnets
+  security_group_id = module.security_group.ecs_sg
 }
 
 module "iam" {

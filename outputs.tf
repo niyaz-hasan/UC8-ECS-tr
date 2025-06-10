@@ -18,7 +18,5 @@ output "alb_arn" {
   value = module.alb.alb_dns_name
 }
 
-output "target_group_arn" {
-  value = module.target_group.arn
-}
+
 

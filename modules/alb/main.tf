@@ -54,7 +54,7 @@ resource "aws_lb_listener_rule" "ecs_listener_rule" {
 
   condition {
     field  = "host-header"
-    values = [var.name]
+    values = [example.com]
   }
 }
 
