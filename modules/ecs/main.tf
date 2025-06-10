@@ -1,6 +1,15 @@
+resource "aws_ecs_cluster" "test" {
+  name = var.name
+  tags = {
+    Name = var.name
+  }
+}
+
+
+
 resource "aws_ecs_service" "main" {
   name            = "${var.name}-service"
-  cluster         = aws_ecs_cluster.main.id
+  cluster         = aws_ecs_cluster.test.id
   task_definition = aws_ecs_task_definition.app_task.arn
   desired_count   = 2
   launch_type     = "FARGATE"
