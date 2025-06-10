@@ -3,6 +3,11 @@ variable "name" {
   type        = string
 }
 
+variable "ecs_role_arn"  {
+  description = "Name of the role arn"
+  type        = string
+}
+
 variable "ecr_repo_url" {
   description = "URL of the ECR repository"
   type        = string
@@ -20,5 +25,11 @@ variable "subnets" {
 
 variable "security_group_id" {
   description = "security_group_id"
+  type        = list(string)
+}
+
+ 
+variable "target" {
+  description = "target"
   type        = list(string)
 }

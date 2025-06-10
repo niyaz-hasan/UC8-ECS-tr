@@ -5,16 +5,101 @@ resource "aws_ecs_cluster" "test" {
   }
 }
 
+resource "aws_ecs_task_definition" "test_1" {
+  "family"                 = "${var.name}-task-definition-1"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 256
+  memory                   = 512
+  container_definitions    = <<TASK_DEFINITION
+    [
+    {
+        "name": "test-container",
+        "image": "${var.ecr_repo_url}:latest",
+        "cpu": 128,
+        "memory": 128,
+        "essential": true,
+        "portMappings": [
+            {
+             "containerPort": 8080,
+             "hostPort": 8080
+            }
+        ]
+    }
+    ]
+    TASK_DEFINITION
+  execution_role_arn       = var.ecs_role_arn
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
+  tags = {
+    "Name" = "${var.name}-task1"
+  }
+}
+
+resource "aws_ecs_task_definition" "test_2" {
+  "family"                 = "${var.name}-task-definition-2"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 256
+  memory                   = 512
+  container_definitions    = <<TASK_DEFINITION
+    [
+    {
+        "name": "test-container",
+        "image": "${var.ecr_repo_url}:latest",
+        "cpu": 128,
+        "memory": 128,
+        "essential": true,
+        "portMappings": [
+            {
+             "containerPort": 80,
+             "hostPort": 80
+            }
+        ]
+    }
+    ]
+    TASK_DEFINITION
+  execution_role_arn       = var.ecs_role_arn
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
+  tags = {
+    "Name" = "${var.name}-task2"
+  }
+}
 
 
-resource "aws_ecs_service" "main" {
-  name            = "${var.name}-service"
+
+resource "aws_ecs_service" "main_1" {
+  name            = "${var.name}-service-1"
   cluster         = aws_ecs_cluster.test.id
-  task_definition = aws_ecs_task_definition.app_task.arn
+  task_definition = aws_ecs_task_definition.test_1.arn
   desired_count   = 2
   launch_type     = "FARGATE"
   load_balancer {
-    target_group_arn = aws_lb_target_group.ecs_target_group.arn
+    target_group_arn = var.target[0]
+    container_name   = "${var.name}-container"
+    container_port   = 80
+  }
+
+  network_configuration {
+    subnets          = var.subnets
+    security_groups = [var.security_group_id]
+    assign_public_ip = true
+  }
+}
+
+resource "aws_ecs_service" "main_2" {
+  name            = "${var.name}-service-2"
+  cluster         = aws_ecs_cluster.test.id
+  task_definition = aws_ecs_task_definition.test_2.arn
+  desired_count   = 2
+  launch_type     = "FARGATE"
+  load_balancer {
+    target_group_arn = var.target[1]
     container_name   = "${var.name}-container"
     container_port   = 80
   }
