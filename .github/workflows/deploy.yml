@@ -1,0 +1,27 @@
+name: Deploy to ECS
+on:
+  workflow_run:
+    workflows: ["Build and Push to ECR"]
+    types:
+      - completed
+deploy-both:
+  runs-on: ubuntu-latest
+  if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  steps:
+    - name: Deploy Service1
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ vars.ECS_TASK_DEFINITION_SERVICE1 }}
+        service: ${{ vars.ECS_SERVICE_SERVICE1 }}
+        cluster: ${{ vars.ECS_CLUSTER }}
+        image: ${{ vars.ECR_REGISTRY }}/service1:${{ github.event.workflow_run.head_sha }}
+        container-name: ${{ vars.CONTAINER_NAME_SERVICE1 }}
+        
+    - name: Deploy Service2
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ vars.ECS_TASK_DEFINITION_SERVICE2 }}
+        service: ${{ vars.ECS_SERVICE_SERVICE2 }}
+        cluster: ${{ vars.ECS_CLUSTER }}
+        image: ${{ vars.ECR_REGISTRY }}/service2:${{ github.event.workflow_run.head_sha }}
+        container-name: ${{ vars.CONTAINER_NAME_SERVICE2 }}
