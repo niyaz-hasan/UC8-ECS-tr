@@ -58,30 +58,34 @@ resource "aws_lb_listener" "http" {
 
 resource "aws_lb_listener_rule" "ecs_listener_rule_1" {
   listener_arn = aws_lb_listener.http.arn
-  priority     = 100
+  priority     = 10
   action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.ecs_target_group_1.arn
   }
 
   condition {
-    field  = "path-pattern"
-    values = ["/service1*"]
+    path-pattern {
+      values = ["/service1*"]
+    }
   }
 }
 
 
+
+
 resource "aws_lb_listener_rule" "ecs_listener_rule_2" {
   listener_arn = aws_lb_listener.http.arn
-  priority     = 200
+  priority     = 20
   action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.ecs_target_group_2.arn
   }
 
   condition {
-    field  = "path-pattern"
-    values = ["/service2*"]
+    path-pattern {
+      values = ["/service2*"]
+    }
   }
 }
 
