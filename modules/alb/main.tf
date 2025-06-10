@@ -18,6 +18,7 @@ resource "aws_lb_target_group" "ecs_target_group_1" {
   name     = "${var.name}-tg1"
   port     = 80
   protocol = "HTTP"
+  target_type = "ip"
   vpc_id   = var.vpc_id
 
 #  health_check {
@@ -36,6 +37,7 @@ resource "aws_lb_target_group" "ecs_target_group_2" {
   name     = "${var.name}-tg2"
   port     = 80
   protocol = "HTTP"
+  target_type = "ip"
   vpc_id   = var.vpc_id
 
 }
