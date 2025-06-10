@@ -31,6 +31,7 @@ jobs:
       - name: Build Docker Image for Service1
         run: |
           docker build -t ${{ vars.ECR_REGISTRY }}/test-repo-1:${{ github.sha }} ./docker/appointments
+          docker tag ${{ vars.ECR_REGISTRY }}/test-repo-1:${{ github.sha }} ${{ vars.ECR_REGISTRY }}/test-repo-1:latest
 
       - name: Push Docker Image for Service1
         run: |
@@ -61,6 +62,7 @@ jobs:
       - name: Build Docker Image for Service2
         run: |
           docker build -t ${{ vars.ECR_REGISTRY }}/test-repo-2:${{ github.sha }} ./docker/patient
+          docker tag ${{ vars.ECR_REGISTRY }}/test-repo-2:${{ github.sha }} ${{ vars.ECR_REGISTRY }}/test-repo-2:latest
           
 
 
