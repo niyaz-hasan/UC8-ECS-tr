@@ -28,7 +28,7 @@ jobs:
       - name: Get Service1 Image URI
         run: |
           echo "image_uri=$(aws ecr describe-images \
-            --repository-name service1 \
+            --repository-name test-repo-1 \
             --image-ids imageTag=${{ github.event.workflow_run.head_sha }} \
             --query 'imageDetails[0].imageTags[?contains(@, `${{ github.event.workflow_run.head_sha }}`)]' \
             --output text)" >> $GITHUB_OUTPUT
@@ -73,7 +73,7 @@ jobs:
       - name: Get Service2 Image URI
         run: |
           echo "image_uri=$(aws ecr describe-images \
-            --repository-name service2 \
+            --repository-name test-repo-2 \
             --image-ids imageTag=${{ github.event.workflow_run.head_sha }} \
             --query 'imageDetails[0].imageTags[?contains(@, `${{ github.event.workflow_run.head_sha }}`)]' \
             --output text)" >> $GITHUB_OUTPUT
