@@ -81,11 +81,7 @@ jobs:
         id: plan
        # if: github.ref == 'refs/heads/main' && (github.event_name == 'pull_request' || github.event_name == 'push')
         if: github.event_name == 'pull_request'
-        run: | 
-          terraform plan -out=tfplan > plan.txt; cat plan.txt
-          # Strip ANSI escape sequences from the plan
-          cat plan.txt | sed 's/\x1b\[[0-9;]*m//g' > clean_plan.txt
-          cat clean_plan.txt
+        run: terraform plan -no-color -input=false
 
       - name: Install terraform-docs
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -130,12 +126,17 @@ jobs:
             #### Terraform Initialization \`${{ steps.init.outcome }}\`
             #### Terraform Validation \`${{ steps.validate.outcome }}\`
             #### Terraform Plan \`${{ steps.plan.outcome }}\`
+
             <details><summary>Show Plan</summary>
+
             \`\`\`\n
             ${process.env.PLAN}
             \`\`\`
+
             </details>
+
             *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
