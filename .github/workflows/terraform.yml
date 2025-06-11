@@ -66,17 +66,21 @@ jobs:
           checkov -d ./ --skip-path .github/* --soft-fail    # Scan the current directory for Terraform files.
 
       - name: Terraform Init
+        id: init
         run: terraform init
        
       - name: Terraform Format Check
+        id: fmt
         run: terraform fmt -recursive
 
       - name: Terraform Validate
+        id: validate
         run: terraform validate
 
       - name: Terraform Plan
         id: plan
-        if: github.ref == 'refs/heads/main' && (github.event_name == 'pull_request' || github.event_name == 'push')
+       # if: github.ref == 'refs/heads/main' && (github.event_name == 'pull_request' || github.event_name == 'push')
+        if: github.event_name == 'pull_request'
         run: terraform plan -out=tfplan > plan.txt; cat plan.txt
 
       - name: Install terraform-docs
