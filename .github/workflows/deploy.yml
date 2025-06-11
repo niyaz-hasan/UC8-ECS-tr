@@ -47,6 +47,10 @@ jobs:
           container-name: ${{ vars.CONTAINER_NAME_SERVICE1 }}
           image: ${{ steps.get_image_service1.outputs.image_uri }}
 
+      - name: Output Updated Task Definition
+        run: |
+          cat task-definition-service1.json
+
       - name: Deploy Service1 to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
