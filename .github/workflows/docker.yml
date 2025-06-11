@@ -24,19 +24,19 @@ jobs:
           role-session-name: github-assume
           aws-region: us-east-1
 
-      - name: Login to Amazon ECR
+      - name: Login to Amazon ECR # login ecr
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build Docker Image for Service1
         run: |
           docker build -t ${{ vars.ECR_REGISTRY }}/test-repo-1:${{ github.sha }} ./docker/appointments
-          docker tag ${{ vars.ECR_REGISTRY }}/test-repo-1:${{ github.sha }} ${{ vars.ECR_REGISTRY }}/test-repo-1:latest
+        #  docker tag ${{ vars.ECR_REGISTRY }}/test-repo-1:${{ github.sha }} ${{ vars.ECR_REGISTRY }}/test-repo-1:latest
 
       - name: Push Docker Image for Service1
         run: |
           docker push ${{ vars.ECR_REGISTRY }}/test-repo-1:${{ github.sha }}
-          docker push ${{ vars.ECR_REGISTRY }}/test-repo-1:latest
+        #  docker push ${{ vars.ECR_REGISTRY }}/test-repo-1:latest
 
       - name: Save Service1 Image Tag
         run: echo "SERVICE1_IMAGE=${{ vars.ECR_REGISTRY }}/test-repo-1:${{ github.sha }}" >> $GITHUB_ENV
@@ -62,14 +62,14 @@ jobs:
       - name: Build Docker Image for Service2
         run: |
           docker build -t ${{ vars.ECR_REGISTRY }}/test-repo-2:${{ github.sha }} ./docker/patient
-          docker tag ${{ vars.ECR_REGISTRY }}/test-repo-2:${{ github.sha }} ${{ vars.ECR_REGISTRY }}/test-repo-2:latest
+        #  docker tag ${{ vars.ECR_REGISTRY }}/test-repo-2:${{ github.sha }} ${{ vars.ECR_REGISTRY }}/test-repo-2:latest
           
 
 
       - name: Push Docker Image for Service2
         run: |
           docker push ${{ vars.ECR_REGISTRY }}/test-repo-2:${{ github.sha }}
-          docker push ${{ vars.ECR_REGISTRY }}/test-repo-2:latest
+        #  docker push ${{ vars.ECR_REGISTRY }}/test-repo-2:latest
 
       - name: Save Service2 Image Tag
         run: echo "SERVICE2_IMAGE=${{ vars.ECR_REGISTRY }}/test-repo-2:${{ github.sha }}" >> $GITHUB_ENV
