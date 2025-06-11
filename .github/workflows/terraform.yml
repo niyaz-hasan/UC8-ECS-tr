@@ -2,10 +2,12 @@ name: Terraform Apply and Destroy
 
 on:
   pull_request:
-
-  # push:
-  #   branches:
-  #     - main
+    branches:
+      - main
+  push:
+    branches:
+      - main
+      - feature
   workflow_dispatch:
     inputs:
       action:
