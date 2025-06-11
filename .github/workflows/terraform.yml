@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - test
+      - feature
   workflow_dispatch:
     inputs:
       action:
