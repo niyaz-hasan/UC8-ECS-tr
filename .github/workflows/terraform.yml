@@ -2,10 +2,10 @@ name: Terraform Apply and Destroy
 
 on:
   pull_request:
-
   # push:
   #   branches:
   #     - main
+
   workflow_dispatch:
     inputs:
       action:
@@ -34,7 +34,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::975049998898:role/githubaction-assumerole
-         # role-session-name: github-assume
+        #  role-session-name: github-assume
           aws-region: us-east-1
 
       - name: Setup Terraform
